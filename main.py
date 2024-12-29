@@ -20,12 +20,10 @@ hero2 = hero_class.Player(
 
 all_enemy = pygame.sprite.Group()
 
-
 def create_enemy_group(num_enemies):
     for _ in range(num_enemies):  # создать num_enemies врагов
         mob = enemy_class.Enemy(width, height)
         all_enemy.add(mob)
-
 
 create_enemy_group(10)  # создаем начальную группу врагов
 
@@ -45,6 +43,10 @@ while running:  # запуск игрового цикла
     # обновление врагов
     all_enemy.update()
 
+    # Проверка и создание новых врагов, если их меньше девяти
+    if len(all_enemy) < 9:
+        create_enemy_group(1)  # Добавляем одного врага
+
     # отрисовка врагов
     all_enemy.draw(screen)
 
@@ -60,14 +62,17 @@ while running:  # запуск игрового цикла
     if pygame.sprite.spritecollide(hero2, all_enemy, False):  # аналогично для второго героя
         print("Hero 2 has been hit!")
         running = False
+
     for bullet in hero1.all_bullet:
         hit_enemies = pygame.sprite.spritecollide(bullet, all_enemy, True)  # Удаляем врагов при попадании
         if hit_enemies:
             bullet.kill()
+
     for bullet in hero2.all_bullet:
         hit_enemies = pygame.sprite.spritecollide(bullet, all_enemy, True)  # Удаляем врагов при попадании
         if hit_enemies:
             bullet.kill()
+
     screen.blit(hero1.image, hero1.rect)  # отрисовка кораблика
     screen.blit(hero2.image, hero2.rect)  # отрисовка кораблика
 
